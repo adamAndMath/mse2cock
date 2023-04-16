@@ -21,7 +21,9 @@ fn main() {
         let name = if card.name.starts_with(&prefix) {
             &card.name[prefix.len()..]
         } else {
-            &card.name
+            let name = remove_regex.replace_all(&card.name, "").into_owned();
+            card.name = format!("{prefix}{name}");
+            continue
         };
         let name = remove_regex.replace_all(&name, "").into_owned();
         card.name = format!("{prefix}{name}");
