@@ -35,7 +35,8 @@ fn main() {
         card.related = note.related;
     }
 
-    let output = quick_xml::se::to_string(&set).unwrap();
+    let mut output = r#"<?xml version="1.0" encoding="UTF-8"?>"#.to_owned();
+    quick_xml::se::to_writer(&mut output, &set).unwrap();
     std::fs::write(format!("{to}.xml"), output).unwrap();
 }
 

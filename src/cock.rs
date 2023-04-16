@@ -1,7 +1,10 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
+#[serde(rename = "cockatrice_carddatabase")]
 pub struct CustomSet {
+    #[serde(rename = "@version")]
+    pub version: String,
     pub sets: Sets,
     pub cards: Cards,
 }
