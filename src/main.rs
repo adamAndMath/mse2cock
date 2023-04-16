@@ -40,7 +40,7 @@ fn parse_notes<'a>(file: &'a str) -> HashMap<&'a str, &'a str> {
 
     for card in file.split("[b]").skip(1) {
         let name: &'a str = &name_regex.captures(card).unwrap().get(1).unwrap().as_str();
-        let note: &'a str = note_regex.captures(card).map_or("</note>", |cap|cap.get(1).unwrap().as_str());
+        let note: &'a str = note_regex.captures(card).map_or("<note></note>", |cap|cap.get(1).unwrap().as_str());
         if map.insert(name, note).is_some() {
             panic!("`{name}` is defined multiple times");
         }
