@@ -27,8 +27,8 @@ fn main() {
         };
         let name = remove_regex.replace_all(&name, "").into_owned();
         card.name = format!("{prefix}{name}");
-        let note = *notes.get(&*name).unwrap_or_else(||panic!("Failed to find note for `{}`", name));
-        let note: CardNote = quick_xml::de::from_str(note).unwrap_or_else(|e|panic!("Failed to parse note for `{}`: {:?}", name, e));
+        let note_str = *notes.get(&*name).unwrap_or_else(||panic!("Failed to find note for `{}`", name));
+        let note: CardNote = quick_xml::de::from_str(note_str).unwrap_or_else(|e|panic!("Failed to parse note for `{}`: {:?}", name, e));
         if !card.related.is_empty() {
             panic!("`{}` has related cards", name);
         }
@@ -41,7 +41,7 @@ fn main() {
 
 fn parse_notes<'a>(file: &'a str) -> HashMap<String, &'a str> {
     let name_regex = Regex::new(r"^(.*?)\[/b\]").unwrap();
-    let note_regex = Regex::new(r"\[spoiler\]Card Notes: (.*?)\[/spoiler\]").unwrap();
+    let note_regex = Regex::new(r"(?s)\[spoiler\]Card Notes: (.*?)\[/spoiler\]").unwrap();
     let remove_regex  = Regex::new(r"[,'’]").unwrap();
     let mut map = HashMap::new();
 
