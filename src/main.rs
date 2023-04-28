@@ -20,7 +20,7 @@ fn main() {
 
     for card in &mut set.cards.card {
         if !card.name.starts_with(&prefix) {
-            card.name = format!("{prefix}{} ", card.name);
+            card.name = format!("{prefix}{}", card.name);
             continue
         }
         let name = card.name[prefix.len()..].to_owned();
