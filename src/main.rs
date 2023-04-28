@@ -1,15 +1,18 @@
 mod cock;
 use cock::*;
 
+use dotenv::{dotenv, var};
 use std::collections::HashMap;
 
 use regex::Regex;
 
 fn main() {
-    let mut args = std::env::args().skip(1);
-    let prefix = args.next().unwrap();
-    let from = args.next().unwrap();
-    let to = args.next().unwrap();
+    dotenv().unwrap();
+
+    let prefix = var("PREFIX").unwrap_or_else(|e|panic!("PREFIX not set: {e}"));
+    let from = var("INPUT").unwrap_or_else(|_|panic!("INPUT not set"));
+    let to = var("OUTPUT").unwrap_or_else(|_|panic!("OUTPUT not set"));
+
     let txt_file = std::fs::read_to_string(format!("{from}.txt")).expect("Failed to read txt");
     let xml_file = std::fs::read_to_string(format!("{from}.xml")).expect("Failed to read xml");
     let notes = parse_notes(&txt_file);
