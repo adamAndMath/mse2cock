@@ -87,7 +87,7 @@ pub struct CardSet {
     pub muid: Option<String>,
     #[serde(rename="@picurl")]
     pub picurl: Option<String>,
-    #[serde(rename="$text")]
+    #[serde(rename="$value")]
     pub name: Option<String>,
 }
 
@@ -101,6 +101,6 @@ pub struct CardRelation {
     pub exclude: Option<String>,
     #[serde(rename="@persistent")]
     pub persistent: Option<String>,
-    #[serde(rename="$text")]
+    #[serde(rename="$value")]
     pub name: Option<String>,
 }
