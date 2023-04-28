@@ -16,12 +16,11 @@ fn main() {
     let mut set : CustomSet = quick_xml::de::from_str(&xml_file).expect("Failed to read xml");
 
     for card in &mut set.cards.card {
-        let name = if card.name.starts_with(&prefix) {
-            card.name[prefix.len()..].to_owned()
-        } else {
-            card.name = format!("{prefix}{}", card.name);
+        if !card.name.starts_with(&prefix) {
+            card.name = format!("{prefix}{} ", card.name);
             continue
-        };
+        }
+        let name = card.name[prefix.len()..].to_owned();
         card.name = format!("{prefix}{name}");
         let note_str = *notes.get(&*name).unwrap_or_else(||panic!("Failed to find note for `{}`", name));
         let note: CardNote = quick_xml::de::from_str(note_str).unwrap_or_else(|e|panic!("Failed to parse note for `{}`: {:?}", name, e));
