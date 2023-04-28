@@ -88,7 +88,7 @@ pub struct CardSet {
     #[serde(rename="@picurl")]
     pub picurl: Option<String>,
     #[serde(rename="$text")]
-    pub name: String,
+    pub name: Option<String>,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -102,5 +102,5 @@ pub struct CardRelation {
     #[serde(rename="@persistent")]
     pub persistent: Option<String>,
     #[serde(rename="$text")]
-    pub name: String,
+    pub name: Option<String>,
 }
