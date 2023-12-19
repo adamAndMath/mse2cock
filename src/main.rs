@@ -23,9 +23,9 @@ fn main() {
             card.name = format!("{prefix}{}", card.name);
             continue
         }
-        let name = card.name[prefix.len()..].to_owned();
+        let key = card.name[prefix.len()..].to_owned();
+        let (name, note_str) = notes.get(&*key).unwrap_or_else(||panic!("Failed to find note for `{}`", key));
         card.name = format!("{prefix}{name}");
-        let note_str = *notes.get(&*name).unwrap_or_else(||panic!("Failed to find note for `{}`", name));
         let note: CardNote = quick_xml::de::from_str(note_str).unwrap_or_else(|e|panic!("Failed to parse note for `{}`: {:?}", name, e));
         if !card.related.is_empty() {
             panic!("`{}` has related cards", name);
@@ -38,18 +38,19 @@ fn main() {
     std::fs::write(format!("{to}.xml"), output).unwrap();
 }
 
-fn parse_notes<'a>(file: &'a str) -> HashMap<String, &'a str> {
+fn parse_notes<'a>(file: &'a str) -> HashMap<String, (String, &'a str)> {
     let name_regex = Regex::new(r"^(.*?)\[/b\]").unwrap();
     let note_regex = Regex::new(r"(?s)\[spoiler\]Card Notes: (.*?)\[/spoiler\]").unwrap();
     let remove_regex  = Regex::new(r"’").unwrap();
     let mut map = HashMap::new();
 
     for card in file.split("[b]").skip(1) {
-        let name = name_regex.captures(card).unwrap()[1].to_owned();
+        let note_name = name_regex.captures(card).unwrap()[1].to_owned();
         let note: &'a str = note_regex.captures(card).map_or("<note></note>", |cap|cap.get(1).unwrap().as_str());
-        let key = remove_regex.replace_all(&name, "'").trim().to_owned();
-        if map.insert(key, note).is_some() {
-            panic!("`{name}` is defined multiple times");
+        let name = remove_regex.replace_all(&note_name, "'").into_owned();
+        let key = name.trim().to_owned();
+        if map.insert(key, (name, note)).is_some() {
+            panic!("`{note_name}` is defined multiple times");
         }
     }
 
